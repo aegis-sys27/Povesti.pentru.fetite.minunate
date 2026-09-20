@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ce-și dorește mama 🐻✨</title>
+  <style>
+    :root {
+      --bg: #FDF6EE;
+      --card-bg: #FFFFFF;
+      --accent: #E85A71;
+      --mama-color: #FF7597;
+      --tata-color: #4E9F3D;
+      --nav-btn: #FFC069;
+      --text: #2D3142;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    /* Container Carte */
+    .book-reader {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 780px;
+      height: 92vh;
+      max-height: 860px;
+      border-radius: 30px;
+      border: 8px solid #FFD166;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Antet carte */
+    .reader-header {
+      background: #FFEAA7;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid #FDCB6E;
+    }
+
+    .reader-header h1 {
+      font-size: 1.35rem;
+      color: #D35400;
+      margin: 0;
+    }
+
+    .badge-details {
+      font-size: 0.85rem;
+      background: #FFFFFF;
+      color: #636E72;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-weight: bold;
+    }
+
+    /* Zona paginii curente */
+    .page-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      background: #FFFDF9;
+      position: relative;
+    }
+
+    .page-illustration {
+      font-size: 5.5rem;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.08));
+      animation: floatIcon 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes floatIcon {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-8px) scale(1.04); }
+    }
+
+    .page-title {
+      font-size: 1.3rem;
+      color: #E85A71;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .page-verse-box {
+      background: #FFF6EC;
+      border: 2px dashed #F39C12;
+      border-radius: 20px;
+      padding: 18px 24px;
+      max-width: 620px;
+      width: 100%;
+    }
+
+    .verse-line {
+      font-size: 1.35rem;
+      line-height: 1.7;
+      color: #2D3436;
+      font-weight: bold;
+    }
+
+    /* Zona butoanelor audio pentru parinti */
+    .audio-dock {
+      background: #FFF1F3;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      border-top: 3px dashed #FFB8C6;
+    }
+
+    .btn-voice {
+      flex: 1;
+      max-width: 250px;
+      padding: 12px 18px;
+      border-radius: 40px;
+      border: none;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-voice:active {
+      transform: scale(0.96);
+    }
+
+    .btn-mama {
+      background: linear-gradient(135deg, #FF7597, #E84393);
+    }
+
+    .btn-tata {
+      background: linear-gradient(135deg, #55EFC4, #00B894);
+      color: #145A32;
+    }
+
+    /* Bara de rasfoire pagini (Prev / Next) */
+    .navigation-dock {
+      padding: 14px 24px;
+      background: #FFFFFF;
+      border-top: 2px solid #F1F2F6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-page {
+      background: var(--nav-btn);
+      border: none;
+      color: #573B0C;
+      font-size: 1.3rem;
+      font-weight: bold;
+      padding: 12px 24px;
+      border-radius: 35px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+      transition: transform 0.15s, background-color 0.15s;
+    }
+
+    .btn-page:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-page:active:not(:disabled) {
+      transform: scale(0.94);
+    }
+
+    .page-indicator {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #8395A7;
+    }
+
+    @media (max-width: 600px) {
+      .book-reader {
+        height: 98vh;
+      }
+      .verse-line {
+        font-size: 1.15rem;
+        line-height: 1.5;
+      }
+      .page-illustration {
+        font-size: 4.2rem;
+      }
+      .btn-voice {
+        font-size: 0.95rem;
+        padding: 10px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="book-reader">
+    <!-- Header -->
+    <div class="reader-header">
+      <h1>Ce-și dorește mama 📖</h1>
+      <span class="badge-details">Rose Bunting • Litera Mică</span>
+    </div>
+
+    <!-- Pagina curenta -->
+    <div class="page-stage">
+      <div class="page-illustration" id="page-art">🌸</div>
+      <div class="page-title" id="page-subtitle">Copertă</div>
+      <div class="page-verse-box">
+        <p class="verse-line" id="page-text-content">Textul paginii se încarcă...</p>
+      </div>
+    </div>
+
+    <!-- Controale Voce Mama / Tata -->
+    <div class="audio-dock">
+      <button class="btn-voice btn-mama" onclick="playAudio('mama')">
+        👩 Ascultă Mama
+      </button>
+      <button class="btn-voice btn-tata" onclick="playAudio('tata')">
+        👨 Ascultă Tata
+      </button>
+    </div>
+
+    <!-- Rasfoire Stanga / Dreapta -->
+    <div class="navigation-dock">
+      <button class="btn-page" id="btn-prev" onclick="goToPage(-1)">⬅ Înapoi</button>
+      <span class="page-indicator" id="page-counter">Pagina 1 / 9</span>
+      <button class="btn-page" id="btn-next" onclick="goToPage(1)">Înainte ➡</button>
+    </div>
+  </div>
+
+  <script>
+    // Toate paginile cu textul din poze
+    const bookPages = [
+      {
+        pageNumber: 0,
+        subTitle: "Copertă & Deschidere",
+        icon: "🐻🌼",
+        text: "«Ce-și dorește mama»\n\nText: Rose Bunting\nIlustrații: Takako Fisher\nEditura Litera Mică"
+      },
+      {
+        pageNumber: 1,
+        subTitle: "O păpădie cu dorințe",
+        icon: "🐻🌬️",
+        text: "O păpădie cu dorințe\nAșteaptă visuri a-mplini.\nVino, puiul meu, aproape,\nS-asculți ce mama și-ar dori."
+      },
+      {
+        pageNumber: 2,
+        subTitle: "Veselie și prieteni",
+        icon: "🐧❄️",
+        text: "Mi-aș dori să râzi cu poftă,\nSă fii fericit mereu.\nPrieteni buni să ai alături,\nNu doar la bine – și la greu."
+      },
+      {
+        pageNumber: 3,
+        subTitle: "Putere și curaj",
+        icon: "🦔🌧️",
+        text: "Aș vrea să știi că ești puternic\nNori negri când pe cer se-adună,\nSă-nțelegi că ai puterea\nDe-a trece prin orice furtună."
+      },
+      {
+        pageNumber: 4,
+        subTitle: "Cântec și speranță",
+        icon: "🐦🌈",
+        text: "Să ții în suflet zeci de triluri,\nCât mai multe mi-aș dori,\nAtunci când dai peste necazuri,\nUn cântec te va-nveseli."
+      },
+      {
+        pageNumber: 5,
+        subTitle: "Încredere în tine",
+        icon: "🦋🌸",
+        text: "Încredere să ai în tine,\nÎn omul ce vei deveni,\nCum mugurul petale-ascunde,\nAșa și tu vei înflori."
+      },
+      {
+        pageNumber: 6,
+        subTitle: "Cerul plin de stele",
+        icon: "🦉✨",
+        text: "Mi-aș mai dori să privești cerul\nȘi să te minunezi de stele,\nSclipirea lor, ce-aprinde gânduri,\nLa fapte bune să te-ndemne."
+      },
+      {
+        pageNumber: 7,
+        subTitle: "Aventura cunoașterii",
+        icon: "🐯🌿",
+        text: "Și aș dori să ai curajul\nÎn lume să te-aventurezi,\nÎncrezător că ai prilejul,\nAtât de multe să înveți."
+      },
+      {
+        pageNumber: 8,
+        subTitle: "Pofta de viață",
+        icon: "🐷🌻",
+        text: "Pofta de viață s-o hrănești\nMereu cu veselie!\nAșa, chiar de îmbătrânești,\nTot bine o să-ți fie."
+      }
+    ];
+
+    let currentPage = 0;
+    const audioTrack = new Audio();
+
+    function renderCurrentPage() {
+      const page = bookPages[currentPage];
+      
+      document.getElementById("page-art").innerText = page.icon;
+      document.getElementById("page-subtitle").innerText = page.subTitle;
+      document.getElementById("page-text-content").innerText = page.text;
+      
+      document.getElementById("page-counter").innerText = `Pagina ${currentPage + 1} / ${bookPages.length}`;
+      document.getElementById("btn-prev").disabled = (currentPage === 0);
+      document.getElementById("btn-next").disabled = (currentPage === bookPages.length - 1);
+
+      audioTrack.pause();
+    }
+
+    function goToPage(delta) {
+      const nextIdx = currentPage + delta;
+      if (nextIdx >= 0 && nextIdx < bookPages.length) {
+        currentPage = nextIdx;
+        renderCurrentPage();
+      }
+    }
+
+    // Gestionare redare voce parinti
+    function playAudio(role) {
+      // Structura fisierelor: de ex. "audio/mama_pagina_1.mp3" sau "audio/tata_pagina_1.mp3"
+      const filePath = `audio/${role}_pagina_${currentPage}.mp3`;
+      audioTrack.src = filePath;
+
+      audioTrack.play().catch(() => {
+        const rolNume = (role === 'mama') ? 'Mamei' : 'Tatălui';
+        alert(`🎙️ Fișierul pentru vocea ${rolNume} nu a fost găsit încă.\n\nSalvați înregistrarea audio în folderul "audio/" cu numele:\n"${role}_pagina_${currentPage}.mp3"`);
+      });
+    }
+
+    // Navigare tastatura (sageata stanga / dreapta)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') goToPage(1);
+      if (e.key === 'ArrowLeft') goToPage(-1);
+    });
+
+    renderCurrentPage();
+  </script>
+</body>
+</html>
