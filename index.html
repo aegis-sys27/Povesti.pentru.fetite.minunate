@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ce-și dorește mama 🐻✨</title>
+  <title>Biblioteca Mea Magică 📚✨</title>
   <style>
     :root {
-      --bg: #FDF6EE;
+      --bg-color: #FFF9E6;
       --card-bg: #FFFFFF;
-      --accent: #E85A71;
-      --mama-color: #FF7597;
-      --tata-color: #4E9F3D;
-      --nav-btn: #FFC069;
-      --text: #2D3142;
+      --accent: #FF6B6B;
+      --accent-blue: #4D96FF;
+      --accent-green: #6BCB77;
+      --text: #2C3E50;
     }
 
     * {
@@ -21,345 +20,402 @@
       padding: 0;
       font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial Rounded MT Bold', sans-serif;
       user-select: none;
-      -webkit-user-select: none;
     }
 
     body {
-      background-color: var(--bg);
+      background-color: var(--bg-color);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
     }
 
-    /* Container Carte */
-    .book-reader {
+    header {
+      background: #FFE66D;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      color: #E056FD;
+      text-shadow: 2px 2px #fff;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 25px;
+      flex: 1;
+    }
+
+    /* Grila de cărți */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .book-card {
       background: var(--card-bg);
+      border-radius: 25px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+      cursor: pointer;
+      border: 5px solid #FFD93D;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .book-card:hover, .book-card:active {
+      transform: scale(1.05);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+      border-color: var(--accent);
+    }
+
+    .book-cover {
       width: 100%;
-      max-width: 780px;
-      height: 92vh;
-      max-height: 860px;
+      height: 160px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      margin-bottom: 15px;
+    }
+
+    .book-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .book-badge {
+      font-size: 0.85rem;
+      background: #E8F0FE;
+      color: #1A73E8;
+      padding: 5px 12px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* Modal / Viewer Răsfoire */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .reader-window {
+      background: #FFF;
+      width: 100%;
+      max-width: 850px;
+      height: 90vh;
       border-radius: 30px;
-      border: 8px solid #FFD166;
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+      border: 8px solid #4D96FF;
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
     }
 
-    /* Antet carte */
     .reader-header {
-      background: #FFEAA7;
-      padding: 12px 20px;
+      padding: 15px 25px;
+      background: #E8F0FE;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 3px solid #FDCB6E;
     }
 
-    .reader-header h1 {
-      font-size: 1.35rem;
-      color: #D35400;
-      margin: 0;
+    .reader-header h2 {
+      font-size: 1.4rem;
+      color: #1A73E8;
     }
 
-    .badge-details {
-      font-size: 0.85rem;
-      background: #FFFFFF;
-      color: #636E72;
-      padding: 4px 10px;
-      border-radius: 14px;
-      font-weight: bold;
+    .btn-close {
+      background: var(--accent);
+      color: white;
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      font-size: 1.8rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    /* Zona paginii curente */
-    .page-stage {
+    .page-content {
       flex: 1;
+      padding: 30px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px;
       text-align: center;
-      background: #FFFDF9;
-      position: relative;
+      background: #FAF8F5;
     }
 
-    .page-illustration {
-      font-size: 5.5rem;
-      margin-bottom: 15px;
-      filter: drop-shadow(0 6px 8px rgba(0,0,0,0.08));
-      animation: floatIcon 3s ease-in-out infinite alternate;
+    .page-visual {
+      font-size: 6rem;
+      margin-bottom: 20px;
     }
 
-    @keyframes floatIcon {
-      0% { transform: translateY(0px) scale(1); }
-      100% { transform: translateY(-8px) scale(1.04); }
+    .page-text {
+      font-size: 1.5rem;
+      line-height: 1.6;
+      max-width: 650px;
+      color: #333;
     }
 
-    .page-title {
-      font-size: 1.3rem;
-      color: #E85A71;
-      margin-bottom: 12px;
-      font-weight: bold;
-    }
-
-    .page-verse-box {
-      background: #FFF6EC;
-      border: 2px dashed #F39C12;
-      border-radius: 20px;
-      padding: 18px 24px;
-      max-width: 620px;
-      width: 100%;
-    }
-
-    .verse-line {
-      font-size: 1.35rem;
-      line-height: 1.7;
-      color: #2D3436;
-      font-weight: bold;
-    }
-
-    /* Zona butoanelor audio pentru parinti */
-    .audio-dock {
-      background: #FFF1F3;
-      padding: 14px 20px;
+    /* Controale Audio Părinți */
+    .audio-controls {
+      background: #FFF0F5;
+      padding: 15px;
       display: flex;
       justify-content: center;
-      gap: 16px;
-      border-top: 3px dashed #FFB8C6;
+      gap: 20px;
+      border-top: 3px dashed #FFB6C1;
     }
 
     .btn-voice {
-      flex: 1;
-      max-width: 250px;
-      padding: 12px 18px;
-      border-radius: 40px;
+      padding: 12px 25px;
+      border-radius: 30px;
       border: none;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: bold;
-      color: #FFFFFF;
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
       gap: 10px;
-      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
-      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: 0.1s transform;
     }
 
     .btn-voice:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
     }
 
     .btn-mama {
-      background: linear-gradient(135deg, #FF7597, #E84393);
+      background: #FF85A1;
+      color: white;
     }
 
     .btn-tata {
-      background: linear-gradient(135deg, #55EFC4, #00B894);
-      color: #145A32;
+      background: #6BCB77;
+      color: white;
     }
 
-    /* Bara de rasfoire pagini (Prev / Next) */
-    .navigation-dock {
-      padding: 14px 24px;
-      background: #FFFFFF;
-      border-top: 2px solid #F1F2F6;
+    /* Bare navigare pagini */
+    .reader-nav {
+      padding: 15px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: #FFF;
+      border-top: 2px solid #EEE;
     }
 
-    .btn-page {
-      background: var(--nav-btn);
-      border: none;
-      color: #573B0C;
-      font-size: 1.3rem;
-      font-weight: bold;
-      padding: 12px 24px;
-      border-radius: 35px;
+    .btn-nav {
+      background: #FFD93D;
+      border: 3px solid #F4C430;
+      color: #444;
+      font-size: 1.5rem;
+      padding: 12px 28px;
+      border-radius: 40px;
       cursor: pointer;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-      transition: transform 0.15s, background-color 0.15s;
-    }
-
-    .btn-page:disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
-    .btn-page:active:not(:disabled) {
-      transform: scale(0.94);
-    }
-
-    .page-indicator {
-      font-size: 1.1rem;
       font-weight: bold;
-      color: #8395A7;
     }
 
-    @media (max-width: 600px) {
-      .book-reader {
-        height: 98vh;
-      }
-      .verse-line {
-        font-size: 1.15rem;
-        line-height: 1.5;
-      }
-      .page-illustration {
-        font-size: 4.2rem;
-      }
-      .btn-voice {
-        font-size: 0.95rem;
-        padding: 10px 14px;
-      }
+    .page-number {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #888;
     }
   </style>
 </head>
 <body>
 
-  <div class="book-reader">
-    <!-- Header -->
-    <div class="reader-header">
-      <h1>Ce-și dorește mama 📖</h1>
-      <span class="badge-details">Rose Bunting • Litera Mică</span>
-    </div>
+  <header>
+    <h1>Alege o poveste! 🧸📖</h1>
+  </header>
 
-    <!-- Pagina curenta -->
-    <div class="page-stage">
-      <div class="page-illustration" id="page-art">🌸</div>
-      <div class="page-title" id="page-subtitle">Copertă</div>
-      <div class="page-verse-box">
-        <p class="verse-line" id="page-text-content">Textul paginii se încarcă...</p>
+  <div class="container">
+    <div class="grid" id="books-grid"></div>
+  </div>
+
+  <!-- Fereastra de citit / rasfoit -->
+  <div class="modal" id="reader-modal">
+    <div class="reader-window">
+      <div class="reader-header">
+        <h2 id="modal-title">Titlu Poveste</h2>
+        <button class="btn-close" onclick="closeReader()">✕</button>
       </div>
-    </div>
 
-    <!-- Controale Voce Mama / Tata -->
-    <div class="audio-dock">
-      <button class="btn-voice btn-mama" onclick="playAudio('mama')">
-        👩 Ascultă Mama
-      </button>
-      <button class="btn-voice btn-tata" onclick="playAudio('tata')">
-        👨 Ascultă Tata
-      </button>
-    </div>
+      <div class="page-content">
+        <div class="page-visual" id="page-icon">🍕</div>
+        <p class="page-text" id="page-text">Aici începe povestea...</p>
+      </div>
 
-    <!-- Rasfoire Stanga / Dreapta -->
-    <div class="navigation-dock">
-      <button class="btn-page" id="btn-prev" onclick="goToPage(-1)">⬅ Înapoi</button>
-      <span class="page-indicator" id="page-counter">Pagina 1 / 9</span>
-      <button class="btn-page" id="btn-next" onclick="goToPage(1)">Înainte ➡</button>
+      <!-- Butoane Voce Mama / Tata -->
+      <div class="audio-controls">
+        <button class="btn-voice btn-mama" onclick="playVoice('mama')">
+          👩 Vocea Mamei
+        </button>
+        <button class="btn-voice btn-tata" onclick="playVoice('tata')">
+          👨 Vocea Tatei
+        </button>
+      </div>
+
+      <div class="reader-nav">
+        <button class="btn-nav" onclick="changePage(-1)">⬅ Înapoi</button>
+        <span class="page-number" id="page-counter">Pagina 1 / 3</span>
+        <button class="btn-nav" onclick="changePage(1)">Înainte ➡</button>
+      </div>
     </div>
   </div>
 
   <script>
-    // Toate paginile cu textul din poze
-    const bookPages = [
+    // Lista cartilor identificate
+    const library = [
       {
-        pageNumber: 0,
-        subTitle: "Copertă & Deschidere",
-        icon: "🐻🌼",
-        text: "«Ce-și dorește mama»\n\nText: Rose Bunting\nIlustrații: Takako Fisher\nEditura Litera Mică"
+        id: "conni_pizza",
+        title: "Conni coace pizza",
+        category: "Gătit & Joacă",
+        color: "#FFE5B4",
+        icon: "🍕",
+        pages: [
+          { icon: "👩‍🍳", text: "Astăzi Conni a decis să fie un bucătar priceput și să prepare cea mai gustoasă pizza de casă!" },
+          { icon: "🍅", text: "Împreună punem sosul dulce de roșii, presărăm brânză multă și așezăm legumele preferate." },
+          { icon: "😋", text: "La cuptor a crescut rumenă și caldă. Toată familia se așază fericită la masă. Ce poftă bună!" }
+        ]
       },
       {
-        pageNumber: 1,
-        subTitle: "O păpădie cu dorințe",
-        icon: "🐻🌬️",
-        text: "O păpădie cu dorințe\nAșteaptă visuri a-mplini.\nVino, puiul meu, aproape,\nS-asculți ce mama și-ar dori."
+        id: "conni_bolnava",
+        title: "Conni e bolnavă",
+        category: "Sănătate & Îngrijire",
+        color: "#E2F0D9",
+        icon: "🩺",
+        pages: [
+          { icon: "🤒", text: "Conni simte că fruntea îi este fierbinte și gâtul o doare puțin. E vremea de odihnă în pătuț." },
+          { icon: "👩‍⚕️", text: "Doctorul este foarte blând, o consultă și îi dă sfaturi bune pentru a prinde puteri repede." },
+          { icon: "🍵", text: "Cu un ceai cald cu miere și multă grijă de la mama și tata, Conni zâmbește din nou!" }
+        ]
       },
       {
-        pageNumber: 2,
-        subTitle: "Veselie și prieteni",
-        icon: "🐧❄️",
-        text: "Mi-aș dori să râzi cu poftă,\nSă fii fericit mereu.\nPrieteni buni să ai alături,\nNu doar la bine – și la greu."
+        id: "lama_imparti",
+        title: "Lama Lama, e vremea să împarți!",
+        category: "Prietenie & Generozitate",
+        color: "#D9E1F2",
+        icon: "🦙",
+        pages: [
+          { icon: "🧸", text: "Micuțul Lama are jucării noi și frumoase, dar un prieten vine în vizită și vrea să se joace împreună." },
+          { icon: "🤝", text: "La început e greu să împarți jucăria preferată, dar joaca în doi este de două ori mai veselă!" },
+          { icon: "🎉", text: "Ce echipă minunată! Când împarți cu dragoste, toată lumea este fericită." }
+        ]
       },
       {
-        pageNumber: 3,
-        subTitle: "Putere și curaj",
-        icon: "🦔🌧️",
-        text: "Aș vrea să știi că ești puternic\nNori negri când pe cer se-adună,\nSă-nțelegi că ai puterea\nDe-a trece prin orice furtună."
+        id: "conni_bicicleta",
+        title: "Conni merge pe bicicletă",
+        category: "Curaj & Mișcare",
+        color: "#FFF2CC",
+        icon: "🚲",
+        pages: [
+          { icon: "🚲", text: "Conni își pune casca de protecție pe cap. Astăzi exersează mersul pe două roți fără roți ajutătoare!" },
+          { icon: "💪", text: "Chiar dacă la început se clatină puțin, Conni nu renunță și ține bine ghidonul drept." },
+          { icon: "⭐", text: "Uraaa! Pedalează liberă prin parc. Cu puțin curaj și exercițiu a reușit!" }
+        ]
       },
       {
-        pageNumber: 4,
-        subTitle: "Cântec și speranță",
-        icon: "🐦🌈",
-        text: "Să ții în suflet zeci de triluri,\nCât mai multe mi-aș dori,\nAtunci când dai peste necazuri,\nUn cântec te va-nveseli."
-      },
-      {
-        pageNumber: 5,
-        subTitle: "Încredere în tine",
-        icon: "🦋🌸",
-        text: "Încredere să ai în tine,\nÎn omul ce vei deveni,\nCum mugurul petale-ascunde,\nAșa și tu vei înflori."
-      },
-      {
-        pageNumber: 6,
-        subTitle: "Cerul plin de stele",
-        icon: "🦉✨",
-        text: "Mi-aș mai dori să privești cerul\nȘi să te minunezi de stele,\nSclipirea lor, ce-aprinde gânduri,\nLa fapte bune să te-ndemne."
-      },
-      {
-        pageNumber: 7,
-        subTitle: "Aventura cunoașterii",
-        icon: "🐯🌿",
-        text: "Și aș dori să ai curajul\nÎn lume să te-aventurezi,\nÎncrezător că ai prilejul,\nAtât de multe să înveți."
-      },
-      {
-        pageNumber: 8,
-        subTitle: "Pofta de viață",
-        icon: "🐷🌻",
-        text: "Pofta de viață s-o hrănești\nMereu cu veselie!\nAșa, chiar de îmbătrânești,\nTot bine o să-ți fie."
+        id: "ce_si_doreste_mama",
+        title: "Ce-și dorește mama",
+        category: "Iubire & Familie",
+        color: "#FCE4D6",
+        icon: "🐻",
+        pages: [
+          { icon: "🐻", text: "Micul ursuleț se întreabă ce i-ar aduce cel mai mult bucurie și căldură mamei sale dragi." },
+          { icon: "💐", text: "O floare culeasă cu mânuțele lui sau o îmbrățișare strânsă, strânsă?" },
+          { icon: "❤️", text: "Mămica zâmbește cu dragoste: cel mai frumos dar din lume ești chiar tu și zâmbetul tău!" }
+        ]
       }
     ];
 
-    let currentPage = 0;
-    const audioTrack = new Audio();
+    let currentBook = null;
+    let currentPageIndex = 0;
+    let audioPlayer = new Audio();
 
-    function renderCurrentPage() {
-      const page = bookPages[currentPage];
-      
-      document.getElementById("page-art").innerText = page.icon;
-      document.getElementById("page-subtitle").innerText = page.subTitle;
-      document.getElementById("page-text-content").innerText = page.text;
-      
-      document.getElementById("page-counter").innerText = `Pagina ${currentPage + 1} / ${bookPages.length}`;
-      document.getElementById("btn-prev").disabled = (currentPage === 0);
-      document.getElementById("btn-next").disabled = (currentPage === bookPages.length - 1);
+    // Generare carti in pagina
+    const grid = document.getElementById("books-grid");
+    library.forEach((book, index) => {
+      const card = document.createElement("div");
+      card.className = "book-card";
+      card.innerHTML = `
+        <div class="book-cover" style="background:${book.color}">${book.icon}</div>
+        <div class="book-title">${book.title}</div>
+        <span class="book-badge">${book.category}</span>
+      `;
+      card.onclick = () => openBook(index);
+      grid.appendChild(card);
+    });
 
-      audioTrack.pause();
+    function openBook(index) {
+      currentBook = library[index];
+      currentPageIndex = 0;
+      document.getElementById("modal-title").innerText = currentBook.title;
+      document.getElementById("reader-modal").classList.add("active");
+      renderPage();
     }
 
-    function goToPage(delta) {
-      const nextIdx = currentPage + delta;
-      if (nextIdx >= 0 && nextIdx < bookPages.length) {
-        currentPage = nextIdx;
-        renderCurrentPage();
+    function closeReader() {
+      document.getElementById("reader-modal").classList.remove("active");
+      audioPlayer.pause();
+    }
+
+    function renderPage() {
+      const page = currentBook.pages[currentPageIndex];
+      document.getElementById("page-icon").innerText = page.icon;
+      document.getElementById("page-text").innerText = page.text;
+      document.getElementById("page-counter").innerText = `Pagina ${currentPageIndex + 1} / ${currentBook.pages.length}`;
+      audioPlayer.pause();
+    }
+
+    function changePage(delta) {
+      const newIndex = currentPageIndex + delta;
+      if (newIndex >= 0 && newIndex < currentBook.pages.length) {
+        currentPageIndex = newIndex;
+        renderPage();
       }
     }
 
-    // Gestionare redare voce parinti
-    function playAudio(role) {
-      // Structura fisierelor: de ex. "audio/mama_pagina_1.mp3" sau "audio/tata_pagina_1.mp3"
-      const filePath = `audio/${role}_pagina_${currentPage}.mp3`;
-      audioTrack.src = filePath;
-
-      audioTrack.play().catch(() => {
-        const rolNume = (role === 'mama') ? 'Mamei' : 'Tatălui';
-        alert(`🎙️ Fișierul pentru vocea ${rolNume} nu a fost găsit încă.\n\nSalvați înregistrarea audio în folderul "audio/" cu numele:\n"${role}_pagina_${currentPage}.mp3"`);
+    // Functie pentru redarea vocii parintilor
+    function playVoice(parent) {
+      // Structura fisierelor: de ex. "audio/conni_pizza_mama_1.mp3"
+      const audioPath = `audio/${currentBook.id}_${parent}_${currentPageIndex + 1}.mp3`;
+      
+      console.log(`Se redă: ${audioPath}`);
+      audioPlayer.src = audioPath;
+      
+      audioPlayer.play().catch(e => {
+        alert(`Fișierul audio "${audioPath}" nu a fost găsit încă.\n\nÎnregistrați vocea pe telefon/calculator și salvați-o în folderul 'audio' cu această denumire.`);
       });
     }
-
-    // Navigare tastatura (sageata stanga / dreapta)
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') goToPage(1);
-      if (e.key === 'ArrowLeft') goToPage(-1);
-    });
-
-    renderCurrentPage();
   </script>
 </body>
 </html>
